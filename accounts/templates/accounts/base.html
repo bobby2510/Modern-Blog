@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href={% static 'accounts/style.css' %} rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="{% static 'accounts/register.css'%}" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaina+2:wght@500&family=Comic+Neue&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
+    <script defer src="{% static 'accounts/script.js' %}"></script>
+    {% if title %}
+    <title>Django Blog - {{title}}</title>
+    {% else %}
+    <title>Django Blog </title>
+    {% endif %}
+</head>
+<body>
+    <div class="navigation-bar">
+        <div class="container nav">
+            <strong class="nav-element nav-first logo"><a href="{% url 'home' %}">Python Feed</a></strong>
+            <p class="nav-element nav-first"><a href="{% url 'home' %}">Home</a></p>
+            <p class="nav-element nav-second"><a href="{% url 'about' %}">About</a></p>
+            {% if user.is_authenticated %}
+            <p class="nav-element nav-first"><a href="{% url 'post:newpost'%}">New Post</a></p>
+            <p class="nav-element nav-first"><a href="{% url 'users:profile' user.username %}">Profile</a></p>
+            <p class="nav-element nav-first"><a href="{% url 'users:logout' %}">Logout</a></p>
+            {% else%}
+            <p class="nav-element nav-first"><a href="{% url 'users:login' %}">Login</a></p>
+            <p class="nav-element nav-first"><a href="{% url 'users:register' %}">Register</a></p>
+            {% endif%}
+        </div>
+    </div>
+    <div class=" main container">
+    <div class="main1">
+        {% if messages %}
+            {% for message in messages%}
+                <div class="alert alert-{{message.tags}}">
+                    {{message}} 
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% block content %}{% endblock content %}
+    </div>
+        <div class="main2">
+            <div class='blog-main-content'>
+                <strong>Our Sidebar</strong>
+                <p style='padding-top:8px;'>You can put any information here you'd like.</p>
+                <table class="main2-table">
+                    <tr><td>Latest Posts</td></tr>
+                    <tr><td>Announcements</td></tr>
+                    <tr><td>Calendars</td></tr>
+                    <tr><td>etc</td></tr>
+                </table>
+            </div>
+            {% block main2 %}
+            {% endblock main2 %}
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+.helptext
+{
+    font-size:10px;
+    margin-left:10px;
+}
+#id_username,#id_password
+{
+    width:100%;
+    border-radius:2px;
+    outline:none;
+    border:1px solid lightgrey;
+    height: 30px;
+    font-size:18px;
+}
+#id_post_thumnail
+{
+    width:100%;
+    outline:none;
+    font-size:15px;
+}
+.post-image
+{
+    width:100%;
+    border-radius: 7px;
+}
+.helptext ul
+{
+    margin-left:20px;
+}
+.form-content span.helptext::after{
+    content:'\a';
+    white-space:pre;
+}
+.fw
+{
+    width:100%;
+    border-radius:2px;
+    outline:none;
+    border:1px solid lightgrey;
+    font-size:18px;
+}
+.size-30
+{
+    height: 30px;
+}
+.size-400
+{
+    height: 200px;
+    resize: none;
+}
+.form-content label{
+    display:inline-block;
+    margin-top:10px;
+}
+#id_image
+{
+    margin-top:10px;
+}
+.form-content fw
+{
+    font-size:18px;
+}
+.form-content input[type=text]:focus
+{
+    border:1px solid blue;
+}
+.form-content input[type=password]:focus
+{
+    border:1px solid blue;
+}
+.form-content input[type=email]:focus
+{
+    border:1px solid blue;
+}
+.errorlist
+{
+    list-style-type: none;
+    padding:5px;
+    background-color: #f2dede;
+    border:1px solid #ebccd1;
+    color:#a94442;
+    width:98%;
+    margin: 3px 0px;
+}
+.blog-header
+{
+    margin-bottom: 5px;
+    border-bottom:1px solid black;
+}
+.btn-form
+{
+    background-color:#890023;
+    color:white;
+    font-size:16px;
+    margin-top:10px;
+    border:1px solid #890023;
+    
+}
+.btn-form:hover{
+    background-color: #690019;
+}
+.profile-image-container
+{
+    display:flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+.profile-image
+{
+    border-radius: 50%;
+    margin-right:20px;
+}
+.large-image
+{
+    width: 100px;
+    height: 100px;
+}
+.small-image
+{
+    width: 60px;
+    height: 60px;
+}
+.very-small-image
+{
+    width:30px;
+    height: 30px;
+}
+.profile-table tr td
+{
+    padding-bottom:10px;
+    padding-top:10px;
+    border-bottom:1px solid rgb(236, 232, 232);
+}
+.profile-table
+{
+    margin-top:10px;
+    border-collapse: collapse;
+}
+.profile-table tr td:first-child
+{
+    font-weight: bold;
+}
+.post-content
+{
+    color:rgba(0,0,0,.6);
+    margin-top:20px;
+}

@@ -1,0 +1,18 @@
+{% extends 'accounts/base.html'%}
+{% block content %}
+    <div class="blog-main-content">
+        <div class="blog-header">
+            <h2>Join Today!</h2>
+        </div>
+        <div class="form-content">
+            <form method='POST'>
+                {% csrf_token %}
+                {{form}}
+                <input type="submit" class="btn-form fw size-30" value="Sign Up">
+            </form>
+        </div>
+        <div class="form-ending">
+            <small>Already Have An Account? Login <a href="{% url 'users:login' %}">here</a></small>
+        </div>
+    </div>
+{% endblock content %}

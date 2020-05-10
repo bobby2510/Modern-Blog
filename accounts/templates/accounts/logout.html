@@ -1,0 +1,9 @@
+{% extends 'accounts/base.html'%}
+{% block content %}
+    <div class="blog-main-content">
+        <div class="blog-header">
+            <h2>You Have Been Logged Out Successfully! </h2>
+        </div>
+            <small>want to login again? click <a href="{% url 'users:login'%}">here</a></small>
+    </div>
+{% endblock content %}
