@@ -1,0 +1,15 @@
+{% extends 'accounts/base.html' %}
+{% block content%}
+    <div class="blog-main-content">
+        <div class="blog-header">
+            <h2>Edit Post</h2>
+        </div>
+        <div class="form-content">
+            <form method='POST' action='save/' enctype="multipart/form-data">
+                {% csrf_token %}
+                {{form}}
+                <input type="submit" class='btn-form size-30 fw' value="Update Post">
+            </form>
+        </div>
+    </div>
+{% endblock %}

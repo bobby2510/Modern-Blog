@@ -1,0 +1,149 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+    <div class="blog-main-content">
+        <div class="blog-header">
+            <div class="profile-image-container">
+                <img src="{{post.author.profile.image.url}}" class="profile-image small-image"  alt="{{post.author.username}}" title="{{post.author.username}}">
+                <div class="blog-content">
+                    <div class="blog-header-post">
+                        <div>posted by
+                        <span class="author-name"><a href={% url 'users:profile' post.author.username %} class='normal-link'>{{ post.author }}</a></span> &nbsp;
+                        <span class="blog-date">{{ post.date_posted | date:'F d Y' }}</span> &nbsp; | &nbsp;
+                        <span class='blog-date'>{{post.time_ago}}</span> 
+                        </div>
+                        <div>
+                        <span class='likes'><span class='like-btn'>likes</span><span class='like-data'>{{ post.upvote_count }}</span></span>
+                        <span class='likes'><span class='like-btn'>dislikes</span><span class='like-data'>{{ post.downvote_count }}</span></span>
+                        </div>
+                    </div>
+
+                        <div class='btn-container'>
+                            {% if user and user == post.author %}
+                            <div>
+                               <form method='POST' action='delete/' style="display: inline;"> {% csrf_token%}<input type="submit" value="Delete" class="btn btn-danger"></form>
+                               <form method='POST' action='edit/' style="display: inline;"> {% csrf_token%}<input type="submit" value="Edit" class="btn btn-blue"></form>
+                            </div>
+                            {% endif %}
+                            <div>
+                                {% if upvote is True %}
+                               <form method='POST' action='upvote/' style="display: inline;"> {% csrf_token%}<input type="submit" value="Liked" class="btn btn-liked"></form>
+                                {% else %}
+                               <form method='POST' action='upvote/' style="display: inline;"> {% csrf_token%}<input type="submit" value="Like" class="btn btn-white"></form>
+                                {% endif %}
+                                {% if downvote is True %}
+                                <form method='POST' action='downvote/' style="display: inline;"> {% csrf_token%}<input type="submit" value="Disliked" class="btn btn-liked"></form>
+                                 {% else %}
+                                <form method='POST' action='downvote/' style="display: inline;"> {% csrf_token%}<input type="submit" value="Dislike" class="btn btn-white"></form>
+                                 {% endif %}
+                            </div>
+                        </div>
+                </div>
+             </div>
+        </div><br>
+        <div class="blog-content">
+            
+            <h2>{{post.title}}</h2>
+            {% if post.post_thumnail %}
+            <br>
+            <img src="{{post.post_thumnail.url}}" class='post-image' title='{{post.title}}' alt="thumbnail">
+            <br>
+            {% endif %}
+            <p class="post-content">{{post.content| urlizetrunc:35 | linebreaks}}</p>
+        </div>
+        <br>
+        <div class="blog-header">
+            <h3>Comments ({{post.comment_count}})</h3>
+        </div><br>
+        {% if comment_write is True %}
+        <div class="blog-content">
+            <form  action="comment/" method="post">
+                {% csrf_token %}
+                {{form}}
+                <input type="submit" value="comment" class='btn-form fw size-30'>
+            </form>
+        </div>
+        {% else%}
+        <p>want to comment? login <a href='{% url 'users:login' %}?next={{post.get_absolute_url}}'>Here</a> </p>
+        {% endif %}
+        <br>
+        <div class="blog-content"><br>
+            {% for comment in page_obj %}
+            <br>
+            <div class="profile-image-container">
+                <img src="{{comment.user.profile.image.url}}" class="profile-image very-small-image"  alt="{{comment.user.username}}" title="{{comment.user.username}}">
+                <div class="blog-content">
+                    <div class="blog-header-post">
+                        <div>commented by
+                        <span class="author-name"><a href={% url 'users:profile' comment.user.username %} class='normal-link'>{{ comment.user.username }}</a></span> &nbsp;
+                        <span class='blog-date'>{{comment.date_commented | timesince }} ago</span> 
+                        </div>
+                        <div>
+                        <span class='likes'><span class='like-btn'>likes</span><span class='like-data'>{{ comment.comment_upvote_count }}</span></span>
+                        <span class='likes'><span class='like-btn'>dislikes</span><span class='like-data'>{{ comment.comment_downvote_count }}</span></span>
+                        </div>
+                    </div>
+                        <div class="blog-cotent">
+                            <p>{{comment.content}}</p>
+                        </div>
+                        <br>
+                        <div class='btn-container'>
+                            {% if user and user == comment.user %}
+                            <div>
+                               <form method='POST' action='{% url 'post:post-comment-delete' post.id comment.id %}' style="display: inline;"> {% csrf_token%}<input type="submit" value="Delete" class="btn-danger btn-small"></form>
+                               <form method='POST' action='{% url 'post:post-comment-view' post.id comment.id %}' style="display: inline;"> {% csrf_token%}<input type="submit" value="Edit" class="btn-blue btn-small"></form>
+                            </div>
+                            {% endif %}
+                            <div>
+                                {% if comment.id in upvoted_set %}
+                               <form method='POST' action='{% url 'post:post-comment-upvote' post.id comment.id %}' style="display: inline;"> {% csrf_token%}<input type="submit" value="Liked" class="btn-small btn-liked"></form>
+                                {% else %}
+                               <form method='POST' action='{% url 'post:post-comment-upvote' post.id comment.id %}' style="display: inline;"> {% csrf_token%}<input type="submit" value="Like" class="btn-small btn-white"></form>
+                                {% endif %}
+                                {% if comment.id in downvoted_set %}
+                                <form method='POST' action='{% url 'post:post-comment-downvote' post.id comment.id %}' style="display: inline;"> {% csrf_token%}<input type="submit" value="Disliked" class="btn-small btn-liked"></form>
+                                 {% else %}
+                                <form method='POST' action='{% url 'post:post-comment-downvote' post.id comment.id %}' style="display: inline;"> {% csrf_token%}<input type="submit" value="Dislike" class="btn-small btn-white"></form>
+                                 {% endif %}
+                            </div>
+                        </div>
+                </div>
+             </div>
+                <hr>
+            {% endfor %}
+        </div>
+    </div>
+    {% if post.comment_count > 0 %}
+    <div class='paginator-container'>
+        {% if page_obj.has_previous %}
+                <span onclick="append_attrib('page',1)" class='normal-link btn paginate-inactive'>First</span>
+                <span onclick="append_attrib('page',{{page_obj.previous_page_number}})" class='normal-link btn paginate-inactive'>Previous</span>
+        {% endif %}
+        {% for num in page_list %}
+                {% if num is page_obj.number %}
+                        <span onclick="append_attrib('page',{{num}})" class='normal-link btn paginate-active'>{{num}}</span>
+                {% else %}
+                        <span onclick="append_attrib('page',{{num}})" class='normal-link btn paginate-inactive'>{{num}}</span>
+                {% endif %}      
+        {% endfor %}
+        {% if page_obj.has_next %}
+                <span onclick="append_attrib('page',{{page_obj.next_page_number}})" class='normal-link btn paginate-inactive'>next</span>
+                <span onclick="append_attrib('page',{{last}})" class='normal-link btn paginate-inactive'>Last</span>
+        {% endif %}
+    </div>
+    {% endif %}
+{% endblock content%}
+{% block main2 %}
+        <div class="blog-main-content">
+                <div class="blog-header">
+                        <h3>Filter Comments By</h3>
+                </div>
+                <div class="blog-content">
+                        <div>
+                             <input type="radio" name="filter" onclick="append_attrib('filter',1)" class='radio-btn' id='rd1'><label for='rd1'>Recency</label>
+                        </div>
+                        <div style='margin-top:5px;'>
+                          <input type="radio" name="filter" onclick="append_attrib('filter',2)" class="radio-btn" id='rd2'><label for='rd2'>Most likes</label>
+                        </div>
+                </div>
+        </div>
+{% endblock main2 %}

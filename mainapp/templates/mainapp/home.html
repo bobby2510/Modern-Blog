@@ -1,0 +1,123 @@
+{% extends 'accounts/base.html'%}
+{% block content %}
+        {% if total is 0 %}
+        <div class="blog-main-content">
+                <h2>currently there are no posts Available!</h2>
+        </div>
+        {% else %}
+        {% for post in page_obj%}
+        <div class="blog-main-content">
+                <div class="profile-image-container">
+                <img src="{{post.author.profile.image.url}}" class="profile-image small-image"  alt="{{post.author.username}}" title="{{post.author.username}}">
+                <div class="blog-content">
+                        <div class="blog-header-post">
+                                <div>
+                                <span class="author-name"><a href={% url 'users:profile' post.author.username %} class='normal-link'>{{ post.author }}</a></span> &nbsp;
+                                <span class="blog-date">{{ post.date_posted | date:'F d Y' }}</span> &nbsp; | &nbsp;
+                                <span class='blog-date'>{{post.time_ago}}</span> 
+                                </div>
+                                <div>
+                                <span class='likes'><span class='like-btn'>likes</span><span class='like-data'>{{ post.upvote_count }}</span></span>
+                                <span class='likes'><span class='like-btn'>dislikes</span><span class='like-data'>{{ post.downvote_count }}</span></span>
+                                <span class='likes'><span class='like-btn'>comments</span><span class='like-data'>{{ post.comment_count }}</span></span>
+                                </div>
+                        </div>
+                        <div>
+                                <a href={% url 'post:post-detail' post.id%} class="normal-link"><h3>{{ post.title}}</h3></a>
+                                <p style='margin-top:4px'>{{ post.content }}<a href="{% url 'post:post-detail' post.id%}" class="normal-link">read more</a></p>
+                        </div>
+                </div>
+                </div>
+        </div>
+        {% endfor%}
+        <div class='paginator-container'>
+                {% if page_obj.has_previous %}
+                        <span onclick="append_attrib('page',1)" class='normal-link btn paginate-inactive'>First</span>
+                        <span onclick="append_attrib('page',{{page_obj.previous_page_number}})" class='normal-link btn paginate-inactive'>Previous</span>
+                {% endif %}
+                {% for num in page_list %}
+                        {% if num is page_obj.number %}
+                                <span onclick="append_attrib('page',{{num}})" class='normal-link btn paginate-active'>{{num}}</span>
+                        {% else %}
+                                <span onclick="append_attrib('page',{{num}})" class='normal-link btn paginate-inactive'>{{num}}</span>
+                        {% endif %}      
+                {% endfor %}
+                {% if page_obj.has_next %}
+                        <span onclick="append_attrib('page',{{page_obj.next_page_number}})" class='normal-link btn paginate-inactive'>next</span>
+                        <span onclick="append_attrib('page',{{last}})" class='normal-link btn paginate-inactive'>Last</span>
+                {% endif %}
+        </div>
+        {% endif %}
+{% endblock content %}
+{% block main2 %}
+        {% if user.is_authenticated %}
+        <div class="blog-main-content">
+                <div class="blog-header">
+                        <h3>My Stats</h3>
+                </div>
+                <div class='my-stats' style='display:flex; justify-content:flex-start; align-items:center;'>
+                        <img src="{{user.profile.image.url }}" class="profile-image small-image" alt="{{user.username}}" title="{{user.username}}">
+                        <table>
+                              <tr>
+                                      <td>name :</td>
+                                      <td>{{user.username}}</td>
+                              </tr> 
+                              <tr>
+                                <td>posts :</td>
+                                <td>{{user_posts}}</td>
+                                </tr>
+                                <tr>
+                                <td>likes :</td>
+                                <td>{{user_likes}}</td>
+                                </tr> 
+                        </table>
+                </div>
+        </div>
+        {%endif%}
+        <div class="blog-main-content">
+                <div class="blog-header">
+                        <h3 style='display:inline'>Search Here</h3><small>(posts,authors....)</small>
+                </div>
+                <form action='search/'>
+                        <div class="search">
+                                <input type="text" name="q" class='search-box'placeholder='search here'>
+                                <input type="submit" value="search" class='search-btn' >
+                        </div>
+                </form>
+        </div>
+        <div class="blog-main-content">
+                <div class="blog-header">
+                        <h3>Filter Posts By</h3>
+                </div>
+                <div class="blog-content">
+                        <div>
+                              {% if f_type is 1 %}  
+                             <input type="radio" name="filter" onclick="append_attrib('filter',1)" class='radio-btn' id='rd1' checked><label for='rd1'>Recency</label>
+                                {%else %}
+                             <input type="radio" name="filter" onclick="append_attrib('filter',1)" class='radio-btn' id='rd1'><label for='rd1'>Recency</label>
+                                {%endif %}
+                        </div>
+                        <div style='margin-top:5px;'>
+                                {%if f_type is 2 %}
+                          <input type="radio" name="filter" onclick="append_attrib('filter',2)" class="radio-btn" id='rd2' checked><label for='rd2'>Most likes</label>
+                                {% else %}
+                          <input type="radio" name="filter" onclick="append_attrib('filter',2)" class="radio-btn" id='rd2'><label for='rd2'>Most likes</label>
+                                {%endif %}
+                        </div>
+                </div>
+        </div>
+        <div class='blog-main-content'>
+                <div class="blog-header">
+                        <h3>Filter By Tags</h3>
+                </div>
+                <div class="tag-container">
+                        {% for tag in tag_query_set %}
+                        {% if tag.name in tag_filter_list %}
+                        <span class='btn-type home-p tag-clicked'  id ='django'  onclick="append_to_json('tag','{{tag.name}}')">{{tag.name}} -({{tag.post_count}})</span>
+                        {%else%}
+                        <span class='btn-type home-p'  id ='django'  onclick="append_to_json('tag','{{tag.name}}')">{{tag.name}} -({{tag.post_count}})</span>
+                        {% endif %}
+                        {% endfor %}
+                </div>
+        </div>
+{% endblock main2 %}

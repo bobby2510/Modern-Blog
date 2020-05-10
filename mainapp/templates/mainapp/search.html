@@ -1,0 +1,85 @@
+{% extends 'accounts/base.html' %}
+
+{% block content%}
+    <div class="blog-main-content">
+        <div class="blog-header">
+            <h3>search results : Authors ({{user_count}})</h3>
+        </div>
+        <br>
+        {% if user_total == 0%}
+        <h5>No User Found!</h5>
+        {%else%}
+        {% for author in user_page_obj %}
+        <div class="user-search-result">
+            <img src="{{author.image.url}}" class='profile-image very-small-image' alt="{{author.user.username}}" title="{{author.user.username}}">
+            <a href="{% url 'users:profile' author.user.username%}">{{author.user.username}}</a>
+        </div>
+        {% endfor %}
+        {%endif %}
+        <div style='margin-top:5px; display:flex; justify-content:space-between;'>
+        {%  if not user_total ==  0 %}
+        {% if user_page_obj.has_previous %}
+        <span onclick="append_attrib('user-search',{{user_page_obj.previous_page_number}})" class='normal-link'>previous page</span>
+       {%else%}
+       <span></span>
+        {% endif %}
+        {% if user_page_obj.has_next %}
+        <span onclick="append_attrib('user-search',{{user_page_obj.next_page_number}})" class='normal-link'>next page</span>
+        {%else%}
+        <span></span>
+        {% endif %}
+        {%endif %}
+        </div>
+    </div>
+        <div class="blog-main-content">
+            <div class="blog-header">
+                <h3>search results : Posts ({{post_count}})</h3>
+            </div>
+            <br>
+            {% if total == 0 %}
+            <h5>No Post Found!</h5>
+            {% else %}
+            {% for post in page_obj %}
+            <div class="profile-image-container" style='border-bottom: 1px solid lightgrey;margin-top:5px; padding-bottom:5px;'>
+            <img src="{{post.author.profile.image.url}}" class="profile-image very-small-image"  alt="{{post.author.username}}" title="{{post.author.username}}">
+            <div class="blog-content">
+                    <div  style="display:flex; justify-content:space-between; border-bottom:1px solid lightgrey;margin-bottom:2px; padding-bottom:2px;">
+                            <div>
+                            <span class="author-name"><a href={% url 'users:profile' post.author.username %} class='normal-link'><small>{{ post.author }}</small></a></span> &nbsp;
+                            <span class="blog-date">{{ post.date_posted | date:'F d Y' }}</span> &nbsp; | &nbsp;
+                            <span class='blog-date'>{{post.time_ago}}</span>
+                            </div>
+                            <div>
+                            <span class='likes'><span class='like-btn'>likes</span><span class='like-data'>{{ post.upvote_count }}</span></span>
+                            <span class='likes'><span class='like-btn'>dislikes</span><span class='like-data'>{{ post.downvote_count }}</span></span>
+                            <span class='likes'><span class='like-btn'>comments</span><span class='like-data'>{{ post.comment_count }}</span></span>
+                        </div>
+                    </div>
+                    <div>
+                            <a href={% url 'post:post-detail' post.id%} class="normal-link"><h5>{{ post.title}}</h5></a>
+                    </div>
+            </div>
+            </div>
+            {% endfor %}
+            {%endif %}
+    </div>
+    {% if not total is 0 %}
+    <div class='paginator-container'>
+        {% if page_obj.has_previous %}
+                <span onclick="append_attrib('page',1)" class='normal-link btn paginate-inactive'>First</span>
+                <span onclick="append_attrib('page',{{page_obj.previous_page_number}})" class='normal-link btn paginate-inactive'>Previous</span>
+        {% endif %}
+        {% for num in page_list %}
+                {% if num is page_obj.number %}
+                        <span onclick="append_attrib('page',{{num}})" class='normal-link btn paginate-active'>{{num}}</span>
+                {% else %}
+                        <span onclick="append_attrib('page',{{num}})" class='normal-link btn paginate-inactive'>{{num}}</span>
+                {% endif %}      
+        {% endfor %}
+        {% if page_obj.has_next %}
+                <span onclick="append_attrib('page',{{page_obj.next_page_number}})" class='normal-link btn paginate-inactive'>next</span>
+                <span onclick="append_attrib('page',{{last}})" class='normal-link btn paginate-inactive'>Last</span>
+        {% endif %}
+    </div>
+    {%endif %}
+{% endblock content %}
